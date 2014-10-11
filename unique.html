@@ -1,0 +1,24 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>数组去重</title>
+</head>
+<body>
+<script type="text/javascript">
+	function unique(target) {
+		var result = [];
+		loop: for (var i = 0, n = target.length; i < n; i++) {
+			for (var x = i + 1; x < n; x++) {
+				if (target[x] === target[i])
+					continue loop;
+			};
+			result.push(target[i]);
+		}
+		return result;
+	}
+	var mm = [1, 1, 2, 3, 4, 5, 5, 6, 7, 9];
+	console.log(unique(mm));
+	}
+</script>
+</body>
+</html>
