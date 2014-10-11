@@ -1,0 +1,31 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <title>无标题</title>
+    <script type="text/javascript" src="http://s1.bdstatic.com/r/www/cache/static/jquery/jquery-1.10.2.min_f2fb5194.js"></script>
+</head>
+<body>
+<ul class="list">
+        <li><a href="#" data-role='add'>添加</a></li>
+        <li><a href="#" data-role='delete'>删除</a></li>
+    </ul>
+<script type="text/javascript">
+    var Action = {
+        add: function(el, data){
+            console.log(data);
+        },
+        'delete': function(el, data){
+            console.log(data);
+        }
+    }
+    $(document).ready(function(){
+        $('.list').delegate('[data-role]', 'click', function(){
+            var el = $(this);
+            if(method = Action[el.data('role')]){
+                method(this, el.html());
+            }
+        })
+    });
+</script>
+</body>
+</html>
