@@ -1,0 +1,193 @@
+<!-- Copyright 2011 jQuery4u.com -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>addClass</title>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<style type="text/css">
+	#addclass a {
+		color: #000;
+	}
+	.link {
+		color: red!important;
+		text-decoration: none;
+	}
+	</style>
+</head>
+<body>
+	<div class="demoarea" id="addclass">
+		<a href="#">Anchor Button</a>
+	</div>
+
+<script type="text/javascript">
+	var JQFUNS = {
+		"runFun": {
+			"addC": function(id, el){
+				$('#' + id +  ' a').addClass(el);
+				$('#' + id).append("<Button id='reset'>重置</Button>");
+				$('a.' + el).click(function(){
+					$(this).toggleClass(el);
+				});
+			},
+			"reset": function(id, el){
+				$('#' + id + ' a').removeClass(el);
+			}
+		}
+	};
+	$(document).ready(function(){
+		JQFUNS.runFun.addC('addclass', 'link');
+		$('#reset').click(function(){
+			JQFUNS.runFun.reset('addclass', 'link');
+		})
+	});
+	//addClass jQuery源码
+	var addClass = function(value) {　
+		var classNames, i, l, elem, setClass, c, cl;
+		if (jQuery.isFunction(value)) {
+			return this.each(function(j) {
+				jQuery(this).addClass(value.call(this, j, this.className));
+			});
+		}
+		if (value && typeof value === "string") {
+			classNames = value.split(rspace);
+			for (i = 0, l = this.length; i < l; i++) {
+				elem = this[i];
+				if (elem.nodeType === 1) {
+					if (!elem.className && classNames.length === 1) {
+						elem.className = value;
+					} else {
+						setClass = " " + elem.className + " ";
+						for (c = 0, cl = classNames.length; c < cl; c++) {
+							if (!~setClass.indexOf(" " + classNames[c] + " ")) {
+								setClass += classNames[c] + " ";
+							}
+						}
+						elem.className = jQuery.trim(setClass);
+					}
+				}
+			}
+		}
+		return this;
+	};
+	//removeClass 源码
+	var removeClass = function( value ) {
+	var classNames, i, l, elem, className, c, cl;
+
+	 // 如果传入函数则执行函数，取返回值作为要移除的classNames
+	if ( jQuery.isFunction( value ) ) {
+		return this.each(function( j ) {
+			// 迭代调用，见.addClass()的注释
+			jQuery( this ).removeClass( value.call(this, j, this.className) );
+		});
+	}
+	/*
+	 * 对比.addClass()的条件：if ( value && typeof value === "string" )
+	 * 从这里可以看出.removeClass()支持的参数类型：
+	 * 函数			迭代处理
+	 * 非空字符串	移除
+	 * undefined	全部移除
+	 * 注：空字符串不做任何处理
+	 */
+	if ( (value && typeof value === "string") || value === undefined ) {
+		classNames = ( value || "" ).split( rspace ); // 分割成数组
+		// value || "" 避免空引用错误的常用技巧（ReferenceError: value is undefined）
+
+		for ( i = 0, l = this.length; i < l; i++ ) { // 遍历匹配的元素，缓存集合长度 
+			elem = this[ i ];
+			 // Element，并且有className属性，没有className就不需要删除
+			if ( elem.nodeType === 1 && elem.className ) {
+				// 如果有value，则从当前的className属性中删除
+				if ( value ) {
+					className = (" " + elem.className + " ").replace( rclass, " " ); // 前后加空格，将\n\t\r替换为空格
+					for ( c = 0, cl = classNames.length; c < cl; c++ ) {
+						className = className.replace(" " + classNames[ c ] + " ", " "); // 将要删除的className替换为空格
+					}
+					// 删除前后的空白符，然后赋值给elem.className
+					elem.className = jQuery.trim( className );
+				// 没有指定value undefined，清空className属性
+				} else {
+					// 清空
+					elem.className = "";
+				}
+			}
+		}
+	}
+
+	return this;
+};
+//toggleClass源码
+var toggleClass = function( value, stateVal ) {
+	var type = typeof value, // value的类型，可以是字符串（一个或多个class），也可以是function，（undefined和boolean是另说）
+		isBool = typeof stateVal === "boolean";
+
+	 // 如果是函数，则执行函数，用函数的返回值作为切换的className，迭代调用jQuery.fn.toggleClass
+	if ( jQuery.isFunction( value ) ) {
+		return this.each(function( i ) {
+			// 迭代调用
+			jQuery( this ).toggleClass( value.call(this, i, this.className, stateVal), stateVal );
+		});
+	}
+
+	// 遍历当前jQuery对象
+	return this.each(function() {
+		// value是字符串，挨个遍历value中的类样式，switch的优先级高于hasClass，hasClass返回false则addClass返回true则removeClass
+		if ( type === "string" ) {
+			// toggle individual class names
+			// 切换单个class
+			var className,
+				i = 0,
+				self = jQuery( this ),
+				state = stateVal,
+				classNames = value.split( rspace ); // 可能有多个class，用空白符分割
+ 			// 因为不需要在className前后加空格，所以这里可以将取值、自增、判断合并为while循环。很好的技巧。
+			while ( (className = classNames[ i++ ]) ) {
+				// check each className given, space seperated list
+				/*
+				 * 如果state是布尔值，则以state为准，否则检查是否含有className
+				 * 含有 state为false，表示需要addClass；反之需要removeClass
+				 * 这个三元表达式合并了state与self.hasClass的判断，小技巧
+				 */
+				state = isBool ? state : !self.hasClass( className );
+				self[ state ? "addClass" : "removeClass" ]( className );
+			}
+		/*
+		 * type === "undefined"	未指定参数，即.toggleClass()
+		 * type === "boolean" 	省略className，只有switch，即.toggleClass( switch )
+		 */
+		// 未指定参数 或 只有switch，则切换整个className
+		} else if ( type === "undefined" || type === "boolean" ) {
+			 // 如果有className，则缓存下来，以便再次调用时恢复
+			if ( this.className ) {
+				// store className if set
+				// 以内部数据的方式缓存
+				jQuery._data( this, "__className__", this.className );
+			}
+
+			// toggle whole className
+			/*
+			 * 切换整个className
+			 * 又是一个合并了几个判断条件的三元，分解为四个逻辑：
+			 * this.className && value 是 true/undefined 	""
+			 * this.className && value 是 false 			""
+			 * !this.className && value 是 true/undefined	jQuery._data( this, "__className__" ) || ""
+			 * !this.className && value 是 false 			""
+			 * 
+			 * 分析一下上边的四个逻辑，可以总结如下：（value用switch代替）
+			 * 1. 如果this.className存在，无论switch什么状态（true/false/undefined），都置为空""
+			 * 2. 如果this.className不存在，如果switch为true/undefined，才会恢复className
+			 * 3. 如果this.className不存在，如果switch为false，置空（保持不变）
+			 * 
+			 * .toggleClass( switch )的用法可以总结如下：
+			 * 1. switch为true，进行正常的切换，等价于.toggleClass()
+			 * 2. switch为false，总是置空
+			 * 
+			 * 一开始真心看不懂，很精致很风骚！
+			 */
+			this.className = this.className || value === false ? "" : jQuery._data( this, "__className__" ) || "";
+		}
+	});
+}
+</script>
+</body>
+</html>
