@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>jQuery 链式操作</title>
+</head>
+<body>
+原理相信百度一下一大把，实际上链式操作仅仅是通过对象上的方法最后 return this 把对象再返回回来，对象当然可以继续调用方法啦，所以就可以链式操作了。那么，简单实现一个：
+<script type="text/javascript">
+	//定义一个js类
+	function Demo(){
+
+	};
+	//扩展它的prototype
+	Demo.prototype = {
+		setName: function(name){
+			this.name = name;
+			return this;
+		},
+		getName: function(){
+			return this.name;
+		},
+		setAge: function(age){
+			this.age = age;
+			return this;
+		};
+	};
+	//工厂函数
+	function D(){
+		return new Demo();
+	}
+
+	//去实现可链式的调用
+	D().setName('CJ').setAge(18).setName();
+</script>
+</body>
+</html>
