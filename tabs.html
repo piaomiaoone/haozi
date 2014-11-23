@@ -1,0 +1,23 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>html5</title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	<script type="text/javascript" src="../js/tab.js"></script>
+</head>
+<body>
+	<ul id="tabs">
+		<li data-tab='users'>Users</li>
+		<li data-tab='groups'>Groups</li>
+	</ul>
+	<div id="tabsContent">
+		<div data-tab='users'>users contents</div>
+		<div data-tab='groups'>groups contents</div>
+	</div>
+	<script type="text/javascript">
+		jQuery(function(){
+			$("ul#tabs").tabs("#tabsContent");
+		});
+	</script>
+</body>
+</html>
