@@ -1,0 +1,42 @@
+
+
+<html>
+<head>
+   <title></title>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+<script>
+ 
+window.onload = function(){
+         varoV = document.getElementById('v1');
+         varoC = document.getElementById('c1');
+         varoGC = oC.getContext('2d');
+        
+         oC.width= oV.videoWidth;
+         oC.height= oV.videoHeight;
+        
+         setInterval(function(){
+                  
+                   oGC.drawImage(oV , 0 , 0 );
+                  
+         },30);
+        
+};
+ 
+</script>
+</head>
+ 
+<body>
+<video controls id="v1">
+ 
+   <source src="11.mp4"></source>
+ 
+</video>
+<canvasid="c1"></canvas>
+</body>
