@@ -4,3 +4,10 @@
     2、必须指定top、bottom、left、right4个值之一，否则只会处于相对定位
     3、父元素的高度不能低于sticky元素的高度
     4、sticky元素仅在其父元素内生效
+2.react
+    1.setSate书写的时候，可以直接穿一个带两个参数的函数，使得我们在重新修改state中值不用再定义变量来接收,直接和原来的值比较就可以了（每次的赋值会重新加载ui）
+    2.props接收的值使用es6解构的方式来接收
+      const { list,name  } = this.props
+    3.定义的事件修改this指向的时候,不建议写在jsx中,而是写到 constructor里面
+    4.ajax请求放在(componentDidMount)中,因为componentDidMount生命周期的话,打开只会渲染一次,这样会大大的提高了性能
+    5.父子组件传值的时候,使用shouldComponentUpdate来判断父向子传的内容是否有变化,没变化的话,子组件就不需要渲染
