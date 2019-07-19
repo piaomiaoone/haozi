@@ -45,3 +45,10 @@
     优点：1.可以大量节省内存占用，减少事件注册。比如ul上代理所有li的click事件就很不错。
           2.可以实现当新增子对象时，无需再对其进行事件绑定，对于动态内容部分尤为合适
     缺点：事件代理的常用应用应该仅限于上述需求，如果把所有事件都用事件代理，可能会出现事件误判。即本不该被触发的事件被绑定上了事件。
+5.对于react合成事件系统的理解：
+    在react内通过onClick绑定的事件，实际上并没有把点击事件绑定到对应的元素上，而是统一放到了document上处理。点击一个元素，首先触发这个元素的原生绑定事件（这里不讨论捕获），接着事件冒泡，到了document上，先触发dispatch，即分发react的合成事件，这个触发过程也是和冒泡类似，从里向外的。dispatch结束后，触发document上剩余的原生事件，也就是说可以认为dispatch是document上的第一个原生绑定事件，这个事件内进行react合成事件的分发。
+　　原生绑定的回调事件中获取到的是原生事件。通过react在jsx内onClick绑定的回调事件中获取到的是合成事件。
+    针对以上过程：
+      如何使所有绑定的react onClick无效？ 在子元素上原生绑定一个事件，然后阻止这个事件冒泡即可。
+      如何只执行子元素的onClick而不执行父元素的onClick？在子元素的onClick中阻止事件冒泡即可，注意这里获取到的是合成事件，调用的是合成事件的方法，也就是说不管是原生事件还是合成事件， stopPropagation 的用法是一致的。
+      如何只执行onClick，而不触发document的原生事件呢？在onClick中，调用： e.nativeEvent.stopImmediatePropagation 。这里的效果相当于在document的第一个原生事件（react自动绑定上的dispatch）中调用了 stopImmediatePropagation 阻止了 document 剩余的原生事件。
