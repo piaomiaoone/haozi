@@ -166,4 +166,23 @@
       因为 await 是异步操作，后来的表达式不返回 Promise 的话，就会包装成 Promise.reslove(返回值)，然后会去执行函数外的同步代码
       同步代码执行完毕后开始执行异步代码，将保存下来的值拿出来使用，这时候 a = 0 + 10
       上述解释中提到了 await 内部实现了 generator，其实 await 就是 generator 加上 Promise的语法糖，且内部实现了自动执行 generator。如果你熟悉 co 的话，其实自己就可以实现这样的语法糖。
-
+12.http协议报文
+    1.请求报文(请求行/请求头/请求数据/空行)
+        请求行
+            求方法字段、URL字段和HTTP协议版本
+            例如：GET /index.html HTTP/1.1
+                get方法将数据拼接在url后面，传递参数受限
+            请求方法：
+                GET、POST、HEAD、PUT、DELETE、OPTIONS、TRACE、CONNECT
+        请求头(key value形式)
+            User-Agent：产生请求的浏览器类型。
+            Accept：客户端可识别的内容类型列表。
+            Host：主机地址
+        请求数据
+            post方法中，会把数据以key value形式发送请求
+        空行
+            发送回车符和换行符，通知服务器以下不再有请求头
+    2.响应报文(状态行、消息报头、响应正文)
+        状态行
+        消息报头
+        响应正文
