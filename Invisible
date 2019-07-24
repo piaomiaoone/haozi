@@ -192,3 +192,102 @@
     伴随着互联网巨大商机的出现，Cookie也从一项服务性工具变成了一个可以带来巨大财富的工具。部分站点利用Cookie收集大量用户信息，并将这些信息转手卖给其他有商业目的的站点或组织，如网络广告商等，从中牟利。使用Cookie技术，您在浏览Web站点时，不论是否愿意，您的每一个X作都有可能被记录下来，在毫无防备的情况下，您正在浏览的网站地址、使用的计算机的软硬件配置，甚至您的名字、电子邮件地址都有可能被收集并转手出售。随着互联网的商业化发展，该问题越来越严重，个人隐私的泄露所带来的并不单纯是一些垃圾邮件，一旦个人资料被滥用，信用卡密码被盗，后果不堪设想。也正因为如此，有关Cookie的争论从未停止过，用户对Cookie的态度也是爱恨交加。
 14.cookie和token都存放在header里面，为什么只劫持前者？
     因为传统的cookie保存的session id，服务器会根据这个session id，确保服务器与客户端对话；这是的cookie是有状态的，意味着验证记录或者会话需要一直在服务端和客户端保持。而token是无状态的，服务器不记录哪些用户登录了或者哪些 JWT 被发布了，只判断token是否有效，通常我们都会给token设置有效时间，来确保不被劫持。所有劫持cookie比劫持token，更有效，毕竟cookie在某种情况下可以一直使用下去，而token不行。
+15.session与cookie的区别
+    （1）Cookie以文本文件格式存储在浏览器中，而session存储在服务端它存储了限制数据量。它只允许4kb它没有在cookie中保存多个变量。
+
+    （2）cookie的存储限制了数据量，只允许4KB，而session是无限量的
+
+    （3）我们可以轻松访问cookie值但是我们无法轻松访问会话值，因此它更安全
+
+    （4）设置cookie时间可以使cookie过期。但是使用session-destory（），我们将会销毁会话。
+
+    总结：如果我们需要经常登录一个站点时，最好用cookie来保存信息，要不然每次登陆都特别麻烦，如果对于需要安全性高的站点以及控制数据的能力时需要用会话效果更佳，当然我们也可以结合两者，使网站按照我们的想法进行运行
+16.primary
+    唯一标识表中的所有行的一个列或一组列。主键不允许空值。不能存在具有相同的主键值的两个行，因此主键值总是唯一标识单个行。表中可以有不止一个键唯一标识行，每个键都称作候选键。只有一个候选键可以选作表的主键，所有其它候选键称作备用键。尽管表不要求具有主键，但定义主键是很好的做法。
+
+    index 
+    关系数据库中基于键值提供对表的行中数据的快速访问的数据库对象。索引还可以在表的行上强制唯一性。对表的主键自动进行索引。在全文检索中，全文索引存储关于重要词和这些词在给定列中的位置的信息。
+17.webpack中loader和plugin的区别
+    1）webpack的打包原理
+      1.识别入口文件
+      2.通过逐层识别模块依赖(Commonjs、amd或者es6的import，webpack都会对其进行分析，来获取代码的依赖)
+      3.webpack做的就是分析代码，转换代码，编译代码，输出代码
+      4.最终形成打包后的代码
+    2）什么是loader
+      1.loader是文件加载器，能够加载资源文件，并对这些文件进行一些处理，诸如编译、压缩等，最终一起打包到指定的文件中
+      2.处理一个文件可以使用多个loader，loader的执行顺序和配置中的顺序是相反的，即最后一个loader最先执行，第一个loader最后执行
+      3.第一个执行的loader接收源文件内容作为参数，其它loader接收前一个执行的loader的返回值作为参数，最后执行的loader会返回此模块的JavaScript源码
+    3）什么是plugin
+      在webpack运行的生命周期中会广播出许多事件，plugin可以监听这些事件，在合适的时机通过webpack提供的API改变输出结果。
+
+      class MyPlugin{
+          constructor(options){
+              console.log("MyPlugin constructor:", options);
+          }
+          apply(compiler){
+              compiler.plugin("compilation", compilation => {
+                  console.log("MyPlugin");
+              });
+          }
+      }
+      module.exports = MyPlugin;
+       
+       
+      webpack.config.js配置：
+      module.exports = {
+          ...
+          plugins: [
+              new MyPlugin({param: "my plugin"})
+          ]
+
+    4）loader和plugin的区别
+      对于loader，它是一个转换器，将A文件进行编译形成B文件，这里操作的是文件，比如将A.scss转换为A.css，单纯的文件转换过程
+      plugin是一个扩展器，它丰富了webpack本身，针对是loader结束后，webpack打包的整个过程，它并不直接操作文件，而是基于事件机制工作，会监听webpack打包过程中的某些节点，执行广泛的任务
+      使用该plugin后，执行的顺序：
+      webpack启动后，在读取配置的过程中会执行new MyPlugin(options)初始化一个MyPlugin获取其实例
+      在初始化compiler对象后，就会通过compiler.plugin(事件名称，回调函数)监听到webpack广播出来的事件并且可以通过compiler对象去操作webpack
+18.清除浮动
+    1.额外标签法（在最后一个浮动标签后，新加一个标签，给其设置clear：both；）（不推荐）
+    2.父级添加overflow属性（父元素添加overflow:hidden）（不推荐）
+    3.使用after伪元素清除浮动（推荐使用）
+      .clearfix:after{/*伪元素是行内元素 正常浏览器清除浮动方法*/
+        content: "";
+        display: block;
+        height: 0;
+        clear:both;
+        visibility: hidden;
+      }
+      .clearfix{
+          *zoom: 1;/*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+      }
+   
+      <body>
+          <div class="fahter clearfix">
+              <div class="big">big</div>
+              <div class="small">small</div>
+              <!--<div class="clear">额外标签法</div>-->
+          </div>
+          <div class="footer"></div>
+      </body>
+      优点：符合闭合浮动思想，结构语义化正确
+      缺点：ie6-7不支持伪元素：after，使用zoom:1触发hasLayout.
+    4.使用before和after双伪元素清除浮动
+      .clearfix:after,.clearfix:before{
+          content: "";
+          display: table;
+      }
+      .clearfix:after{
+          clear: both;
+      }
+      .clearfix{
+          *zoom: 1;
+      }
+   
+      <div class="fahter clearfix">
+          <div class="big">big</div>
+          <div class="small">small</div>
+      </div>
+      <div class="footer"></div>
+      优点：代码更简洁
+      缺点：用zoom:1触发hasLayout.
+  
