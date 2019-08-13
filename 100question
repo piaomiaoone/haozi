@@ -1,0 +1,38 @@
+1.sleep(1000)实现一个 sleep 函数
+const sleep = time => {
+  return new Promise(resolve => setTimeout(resolve,time))
+}
+sleep(1000).then(()=>{
+  console.log(1)
+})
+//Generator
+function* sleepGenerator(time) {
+  yield new Promise(function(resolve,reject){
+    setTimeout(resolve,time);
+  })
+}
+sleepGenerator(1000).next().value.then(()=>{console.log(1)})
+//async
+function sleep(time) {
+  return new Promise(resolve => setTimeout(resolve,time))
+}
+async function output() {
+  let out = await sleep(1000);
+  console.log(1);
+  return out;
+}
+output();
+//ES5
+function sleep(callback,time) {
+  if(typeof callback === 'function')
+    setTimeout(callback,time)
+}
+
+function output(){
+  console.log(1);
+}
+sleep(output,1000);
+2.使用 sort() 对数组 [3, 15, 8, 29, 102, 22] 进行排序，输出结果
+  sort 函数，可以接收一个函数，返回值是比较两个数的相对顺序的值
+  [3, 15, 8, 29, 102, 22].sort()
+or[3, 15, 8, 29, 102, 22].sort((a,b) => {return a -b})
