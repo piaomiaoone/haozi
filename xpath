@@ -1,0 +1,100 @@
+#有同学说，我正则用的不好，处理HTML文档很累，有没有其他的方法？
+#有！那就是XPath，我们可以先将 HTML文件 转换成 XML文档，
+#然后用 XPath 查找 HTML 节点或元素。
+
+#我们需要安装lxml模块来支持xpath的操作。
+
+
+#解析字符串形式html
+text ='''
+<div>
+    <ul>
+         <li class="item-0"><a href="link1.html">张三</a></li>
+         <li class="item-1"><a href="link2.html">李四</a></li>
+         <li class="item-inactive"><a href="link3.html">王五</a></li>
+         <li class="item-1"><a href="link4.html">赵六</a></li>
+         <li class="item-0"><a href="link5.html">老七</a> 
+     </ul>
+ </div>
+'''
+
+from lxml import etree
+
+#etree.HTML()将字符串解析成了特殊的html对象
+html=etree.HTML(text)
+
+#将html对象转成字符串
+result=etree.tostring(html,encoding="utf-8").decode()
+
+print(result)
+
+
+
+text = '''
+    <div id="collect_form_30210691"></div>
+    <p class="ul"></p>
+    <table width="100%" class="">
+        <tbody><tr class="item">
+            <td width="100" valign="top">
+                    <a class="nbg" href="https://movie.douban.com/subject/26816090/" title="沉默的证人">
+                        <img src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2564369311.webp" width="75" alt="沉默的证人" class="">
+                    </a>
+            </td>
+        </tr>
+    </tbody></table>
+'''
+
+
+from lxml import etree
+
+#etree.HTML()将字符串解析成了特殊的html对象
+
+html = etree.HTML(text)
+
+#将html对象转成字符串
+result=etree.tostring(html,encoding="utf-8").decode()
+
+print(result)
+
+
+
+#解析本地html
+#爬虫中网页处理方式：
+#1，在爬虫中，数据获取和数据清洗一体，HTML()
+#2、数据获取和数据清洗分开，parse()
+
+from lxml import etree 
+
+#获取本地html文档
+html=etree.parse(r"C:\file\hello.html")
+
+result=etree.tostring(html,encoding="utf-8").decode()
+
+print(result)
+
+
+#获取一类标签
+from lxml import etree
+
+html=etree.parse(r"C:\file\hello.html")
+
+result=html.xpath("//a") #获取所有span标签的信息
+
+
+print(result[0].text)
+
+
+#标签和属性
+
+
+#获取指定属性的标签
+
+from lxml import etree 
+
+html = etree.parse("c:/file/hello.html")
+
+# result1=html.xpath("//li[@class='item-88']")
+
+result2=html.xpath("//li/a[@href='link2.html']")
+
+print(result2)
